@@ -3,13 +3,14 @@ sap.ui.define([
     'sap/m/MessageToast',
     './utils/formatter', 'sap/ui/model/Filter',
     'sap/ui/model/FilterOperator',
-    'sap/ui/model/json/JSONModel'
+    'sap/ui/model/json/JSONModel',
+    'sap/ui/model/Sorter',
 
 ],
     /**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-    function (BaseController, MessageToast, formatter, Filter, FilterOperator, JSONModel) {
+    function (BaseController, MessageToast, formatter, Filter, FilterOperator, JSONModel, Sorter) {
         "use strict";
 
         return BaseController.extend("frontend.controller.Master", {
@@ -178,6 +179,26 @@ sap.ui.define([
                 this.oTable.getBinding("items").filter(aFilters);
                 this.oTable.setShowOverlay(false);
             },
+
+            onOrderTable: function (oEvent) {
+                var oTable = this.byId("tablePazienti"),
+                    oBinding = oTable.getBinding("items"),
+                    sPath = oEvent.getSource().getCustomData()[0].getValue(),
+                    bDescending,
+                    aSorters = [];
+
+                if (oBinding.aSorters[0] && oBinding.aSorters[0].sPath == sPath) {
+                    bDescending = oBinding.aSorters[0].bDescending ? false : true
+                } else {
+                    bDescending = true;
+                }
+
+                aSorters.push(new Sorter(sPath, bDescending));
+
+                // apply the selected sort and group settings
+                oBinding.sort(aSorters);
+            },
+
 
 
 
