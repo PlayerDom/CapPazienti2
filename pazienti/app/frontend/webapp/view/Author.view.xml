@@ -1,0 +1,136 @@
+<mvc:View
+    controllerName="frontend.controller.Author"
+    xmlns="sap.m"
+    xmlns:c="sap.ui.core"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:f="sap.ui.layout.form"
+    busyIndicatorDelay="0"
+>
+    <Page
+        id="authorPage"
+        title="{i18n>AuthorDetailsOf} {name}"
+        showNavButton="true"
+        navButtonPress=".onNavBack"
+        class="sapUiResponsiveContentPadding"
+    >
+        <content>
+            <IconTabBar
+                id="idIconTabBar"
+                select=".onTabSelect"
+                selectedKey="{view>/selectedTabKey}"
+                class="sapUiResponsiveContentPadding"
+            >
+                <items>
+                    <IconTabFilter
+                        showAll="true"
+                        icon="sap-icon://begin"
+                        count="{books/$count}"
+                        text="{= ${books/$count} > 1 ? ${i18n>multipleBooks} : ${i18n>singleBook} }"
+                        key="All"
+                    >
+                    <List
+                headerText="{i18n>bookListHeader}"
+                items="{
+			        path: 'books'
+		            }"
+            >
+                <ObjectListItem
+                    title="{title}"
+                    number="{
+				parts:[{path:'price'}],
+				type: 'sap.ui.model.type.Currency',
+				formatOptions: {showMeasure: false}
+					}"
+                    numberUnit="EUR"
+                >
+                    <firstStatus>
+                        <ObjectStatus
+                            text="{i18n>hype} {hype}"
+                            state="{
+								path: 'hype',
+								formatter: '.formatter.status'
+							}"
+                        />
+                    </firstStatus>
+                    <ObjectAttribute text="{i18n>edition} {edition}" />
+                </ObjectListItem>
+            </List>
+            </IconTabFilter>
+                    <IconTabSeparator />
+                    <IconTabFilter
+                        icon="sap-icon://begin"
+                        iconColor="Positive"
+                        text="Bio"
+                        key="Bio"
+                    >
+                        <Panel
+                            width="auto"
+                            class="sapUiResponsiveMargin"
+                        >
+                            <!--<headerToolbar>
+						<OverflowToolbar>
+							<Title text="Header"/>
+							<ToolbarSpacer />
+							<Button icon="sap-icon://settings" />
+							<Button icon="sap-icon://drop-down-list" />
+						</OverflowToolbar>
+					</headerToolbar>-->
+                            <content>
+                                <VBox>
+                                    <f:SimpleForm
+                                        id="SimpleFormDisplay480"
+                                        editable="false"
+                                        layout="ResponsiveGridLayout"
+                                        title="Address"
+                                        labelSpanL="4"
+                                        labelSpanM="4"
+                                        emptySpanL="0"
+                                        emptySpanM="0"
+                                        columnsL="2"
+                                        columnsM="2"
+                                    >
+                                        <f:content>
+                                            <c:Title text="Office" />
+                                            <Label text="Name" />
+                                            <Text text="Red Point Stores" />
+                                            <Label text="Street/No." />
+                                            <Text text="Main St 1618" />
+                                            <Label text="ZIP Code/City" />
+                                            <Text text="31415 Maintown" />
+                                            <Label text="Country" />
+                                            <Text text="Germany" />
+                                            <c:Title text="Online" />
+                                            <Label text="Web" />
+                                            <Text text="http://www.sap.com" />
+                                            <Label text="Twitter" />
+                                            <Text text="@sap" />
+                                        </f:content>
+                                        <f:layoutData>
+                                            <FlexItemData
+                                                shrinkFactor="0"
+                                                backgroundDesign="Solid"
+                                                styleClass="sapContrastPlus"
+                                            />
+                                        </f:layoutData>
+                                    </f:SimpleForm>
+                                </VBox>
+                            </content>
+                        </Panel>
+                    </IconTabFilter>
+                    <IconTabSeparator />
+                    <IconTabFilter
+                        id="adminTab"
+                        icon="sap-icon://home"
+                        text="Only for Admin"
+                        visible="{isAdmin}"
+                        key="Admin"
+                    >
+                    <Text text="Only Admin can see this!"></Text>
+                    </IconTabFilter>
+                </items>
+            </IconTabBar>
+
+            
+        </content>
+    </Page>
+</mvc:View>

@@ -1,0 +1,15 @@
+# Node modules
+node_modules/
+
+# File di log
+*.log
+
+# Cache
+.cache/
+
+# Impostazioni locali di VSCode
+.vscode/
+
+# Sistemi operativi
+.DS_Store  # macOS
+Thumbs.db  # Windows

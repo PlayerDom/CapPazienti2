@@ -1,0 +1,1 @@
+using ValidService as service from '../../srv/valid-service';

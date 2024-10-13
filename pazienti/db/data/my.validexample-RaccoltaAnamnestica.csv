@@ -1,0 +1,11 @@
+ID,motivoVisita,visitaNpi,visitaOdontoiatrica,visitaOrl,audiometria,asiloNido,numeroBambiniFamiglia,lavoroGenitori,tempoBambino,paziente_ID
+4da2b654-8476-4a8e-9687-8cd1dc02f55d,Controllo generale,Visita eseguita,Visita eseguita,Visita eseguita,Normale,Asilo nido pubblico,2,Ingegneri,Con nonni,c123e456-78ab-12d3-a456-426614174001
+1c415882-aa3a-42f3-b8c9-2a39a0ea1fc2,Dolore ai denti,Non necessaria,Visita eseguita,Non necessaria,Buono,Asilo nido privato,1,Medici,Con baby-sitter,b234f567-89cd-23d4-a567-526715284002
+937e326c-a88f-46d8-a0d6-73b9ea8371f6,Controllo udito,Visita non eseguita,Visita eseguita,Non necessaria,Buono,Asilo nido pubblico,3,Avvocati,Con genitori,f567g890-01ef-34g5-b678-614815394003
+cc8f904d-f79c-4afd-ab08-3802513a3217,Difficoltà di parola,Visita eseguita,Non necessaria,Visita eseguita,Leggera,Non frequenta,2,Imprenditori,Con madre,h890i123-45gh-67i8-c789-728937504004
+6f4146c8-6c52-442a-acf4-d009bbbfcea5,Controllo ortodontico,Non necessaria,Visita eseguita,Visita eseguita,Buono,Asilo nido privato,2,Insegnanti,Con nonni,i123j456-78kl-90m1-d234-839023705005
+34d7c081-5f53-4861-b101-c5460ab545e2,Problemi respiratori,Visita eseguita,Visita eseguita,Non necessaria,Normale,Non frequenta,1,Commercianti,Con padre,j345k678-90mn-12o3-e456-941134816006
+ae52ac60-75b9-4c41-8d5b-5ce9ac4b30a9,Problemi dentali,Non necessaria,Visita eseguita,Visita eseguita,Leggera,Asilo nido pubblico,3,Medici,Con nonni,k567l789-01op-34q5-f678-052225927007
+2eade5f5-cc60-450e-8fe3-cfcd8a26357a,Controllo generale,Visita eseguita,Non necessaria,Non necessaria,Normale,Asilo nido privato,2,Avvocati,Con genitori,l789m890-12qr-45s6-g789-163347039008
+6fe30179-ce15-4569-afbc-f66e96d31e96,Problemi di equilibrio,Visita eseguita,Visita eseguita,Non necessaria,Leggera,Non frequenta,1,Ingegneri,Con baby-sitter,m901n234-23st-56u7-h890-274458150009
+b7a468f2-0449-4688-b5f5-942b969a37e5,Problemi di linguaggio,Visita eseguita,Non necessaria,Visita eseguita,Buono,Asilo nido pubblico,2,Commercianti,Con nonni,n012o345-34uv-67w8-i901-385569261010

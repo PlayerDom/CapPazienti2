@@ -1,0 +1,11 @@
+ID,gravidanza,parto,allattamento,svezzamento,deambulazione,lallazione,primeParole,paziente_ID
+3b402501-c5fc-48c9-a641-0bb4c65bcf00,Normale,Naturale,Seno,Normale,Normale,Normale,A 12 mesi,c123e456-78ab-12d3-a456-426614174001
+3f5c8196-9809-4ffc-81b4-cf910f919abd,A rischio,Cesareo,Biberon,Lenta,Ritardata,Ritardata,A 14 mesi,b234f567-89cd-23d4-a567-526715284002
+782a0aa2-e127-4437-8e2d-89b08e1271f2,Normale,Assistito,Seno,Normale,Normale,Normale,A 10 mesi,f567g890-01ef-34g5-b678-614815394003
+5587c35b-2bb6-4ccb-9825-0aab3a1a53fd,Normale,Naturale,Seno,Normale,Normale,Normale,A 11 mesi,h890i123-45gh-67i8-c789-728937504004
+e2fa7ddd-461a-43fe-9905-9b28314fd3a3,A rischio,Cesareo,Biberon,Lenta,Ritardata,Normale,A 15 mesi,i123j456-78kl-90m1-d234-839023705005
+8c7ca7ea-8b9e-4166-bdfe-ed2fff3e0a20,Normale,Naturale,Seno,Normale,Normale,Normale,A 12 mesi,j345k678-90mn-12o3-e456-941134816006
+d5c11880-a052-4d0b-906b-f5761f31faf3,A rischio,Cesareo,Biberon,Lenta,Ritardata,Ritardata,A 14 mesi,k567l789-01op-34q5-f678-052225927007
+0117ee1f-9db4-4463-b349-8f3e1898626c,Normale,Naturale,Seno,Normale,Normale,Normale,A 10 mesi,l789m890-12qr-45s6-g789-163347039008
+e29ef706-2673-4102-b95a-56c9771766d6,A rischio,Assistito,Seno,Normale,Normale,Normale,A 12 mesi,m901n234-23st-56u7-h890-274458150009
+7c21bdd3-774b-4392-ad10-72d161e0ef68,Normale,Naturale,Seno,Normale,Normale,Normale,A 11 mesi,n012o345-34uv-67w8-i901-385569261010

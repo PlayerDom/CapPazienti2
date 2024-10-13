@@ -1,0 +1,182 @@
+@server = http://localhost:4004
+@service = /odata/v4/valid
+
+@authorization-header = Basic admin pw
+
+###
+# @name BooksQuery
+
+GET {{server}}{{service}}/Books
+Authorization: {{authorization-header}}
+
+###
+# @name AuthorsQuery
+
+GET {{server}}{{service}}/Authors
+Authorization: {{authorization-header}}
+
+### Should return error on title not null
+# @name BooksCreate-NullTitle
+
+POST {{server}}{{service}}/Books
+Content-Type: application/json
+Authorization: {{authorization-header}}
+
+    {
+     
+      "edition": 4,
+      "price": 17.99,
+      "availability_date": "2021-06-27T14:52:23Z",
+      "hype": "low",
+      "author_ID": "3758c076-8c78-4d6a-b437-e6a3ba1630a8"
+    }
+
+### Should return error on edition out of range
+# @name BooksCreate-EditionOutOfRange
+
+POST {{server}}{{service}}/Books
+Content-Type: application/json
+Authorization: {{authorization-header}}
+
+    {
+      "title": "The Castle",
+      "edition": 10,
+      "price": 17.99,
+      "availability_date": "2021-06-27T14:52:23Z",
+      "hype": "low",
+      "author_ID": "3758c076-8c78-4d6a-b437-e6a3ba1630a8"
+    }
+
+### Should return error on price out of range
+# @name BooksCreate-PriceOutOfRange
+
+POST {{server}}{{service}}/Books
+Content-Type: application/json
+Authorization: {{authorization-header}}
+
+    {
+      "title": "The Castle",
+      "edition": 4,
+      "price": 39.99,
+      "availability_date": "2021-06-27T14:52:23Z",
+      "hype": "low",
+      "author_ID": "3758c076-8c78-4d6a-b437-e6a3ba1630a8"
+    }
+
+### Should return error on hype not in list
+# @name BooksCreate-HypeOutOfList
+
+POST {{server}}{{service}}/Books
+Content-Type: application/json
+Authorization: {{authorization-header}}
+
+    {
+      "title": "The Castle",
+      "edition": 4,
+      "price": 12.50,
+      "availability_date": "2021-06-27T14:52:23Z",
+      "hype": "hyper",
+      "author_ID": "3758c076-8c78-4d6a-b437-e6a3ba1630a8"
+    }
+
+### Should return error on date not in range
+# @name BooksCreate-DateOutOfRange
+
+POST {{server}}{{service}}/Books
+Content-Type: application/json
+Authorization: {{authorization-header}}
+
+    {
+      "title": "The Castle",
+      "edition": 4,
+      "price": 12.50,
+      "availability_date": "2025-06-27T14:52:23Z",
+      "hype": "low",
+      "author_ID": "3758c076-8c78-4d6a-b437-e6a3ba1630a8"
+    }
+
+### Should return error on author not existing
+# @name BooksCreate-AuthorNotExisting
+
+POST {{server}}{{service}}/Books
+Content-Type: application/json
+Authorization: {{authorization-header}}
+
+    {
+      "title": "The Castle",
+      "edition": 4,
+      "price": 12.50,
+      "availability_date": "2021-06-27T14:52:23Z",
+      "hype": "high",
+      "author_ID": "f2e4333b-8adb-4c90-b064-62d71c042dad"
+    }
+
+### Should Return Multiple Errors
+# @name BooksCreate-MultipleErrors
+
+POST {{server}}{{service}}/Books
+Content-Type: application/json
+Authorization: {{authorization-header}}
+
+    {
+      "edition": 11,
+      "price": 47.99,
+      "availability_date": "2025-06-27T14:52:23Z",
+      "hype": "zero",
+      "author_ID": "1e43ce94-cbd5-42c5-b440-d59105a5a37f"
+    }
+
+### Should return error on author name already present (even with a different ID key)
+# @name AuthorsCreate-AuthorNameExisting
+
+POST {{server}}{{service}}/Authors
+Content-Type: application/json
+Authorization: {{authorization-header}}
+
+    {
+      "ID":"85d4e073-0df3-43c3-a155-31d5189f465a",
+      "name":"Franz Kafka",
+      "favorite": true
+    }
+
+### Should return error on favorite not present
+# @name AuthorsCreate-FavoriteMandatory
+
+POST {{server}}{{service}}/Authors
+Content-Type: application/json
+Authorization: {{authorization-header}}
+
+    {
+      "ID": "85d4e073-0df3-43c3-a155-31d5189f465a",
+      "name":"Friedrich Nietzsche"
+    }
+
+
+### Should be Successful
+# @name BooksCreate
+
+POST {{server}}{{service}}/Books
+Content-Type: application/json
+Authorization: {{authorization-header}}
+
+    {
+      "title": "The Castle",
+      "edition": 4,
+      "price": 17.99,
+      "availability_date": "2021-06-27T14:52:23Z",
+      "hype": "low",
+      "author_ID": "3758c076-8c78-4d6a-b437-e6a3ba1630a8"
+    }
+
+### Should be successful
+# @name AuthorsCreate
+
+POST {{server}}{{service}}/Authors
+Content-Type: application/json
+Authorization: {{authorization-header}}
+
+    {
+      "ID": "85d4e073-0df3-43c3-a155-31d5189f465a",
+      "name":"Friedrich Nietzsche",
+      "favorite": true
+    }
