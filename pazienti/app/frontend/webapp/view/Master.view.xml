@@ -397,7 +397,7 @@
                             minScreenWidth="1200px"
                         >
                             <FlexBox alignItems="Center">
-                                <Text text="{i18n>labelTelefonolabelEmail} " />
+                                <Text text="{i18n>labelTelefono} " />
 
                                 <Button
                                     icon="sap-icon://sort"
@@ -433,7 +433,7 @@
                             press=".onListItemPressed"
                         >
                             <cells>
-                                <Text text="{cognome} {nome}" />
+                                <Text text="{cognome}" />
                                 <Text
                                     text="{path: 'dataNascita', formatter: '.formatter.formatEta'}"
                                 />

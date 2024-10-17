@@ -7,7 +7,6 @@ entity Users : cuid,managed {
 }
 
 entity Pazienti : cuid {
-  nome: String(100) @title: 'Nome';
   cognome: String(100) @title: 'Cognome';
   dataNascita: Timestamp @title: 'Data di Nascita';
   CF: String(16) @title: 'Codice Fiscale';

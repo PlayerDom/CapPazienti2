@@ -11,6 +11,20 @@ module.exports = async function () {
         };
     });
 
+  
+
+    this.on('READ', 'Pazienti', async req => {
+        try {
+            const result = await cds.run(req.query);
+            return result;
+        } catch (error) {
+            let errorMessage = createMessage(error)
+            LOG.error('Error executing query:', error);
+            req.reject(errorMessage.code, errorMessage.message);
+        }
+    })
+
+
     // Gestione degli errori
     this.on('error', (err, req) => {
         console.error("Errore generico:", err);
