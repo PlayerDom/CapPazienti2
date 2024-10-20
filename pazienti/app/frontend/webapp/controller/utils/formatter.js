@@ -9,26 +9,10 @@ sap.ui.define([
 			let birthDate;
 			
 			// Verifica se la lingua del browser è italiano
-			if (navigator.language.startsWith('it')) {
-				// Mappa dei mesi in italiano a quelli in inglese
-				const monthMap = {
-					"gen": "Jan", "feb": "Feb", "mar": "Mar", "apr": "Apr", 
-					"mag": "May", "giu": "Jun", "lug": "Jul", "ago": "Aug", 
-					"set": "Sep", "ott": "Oct", "nov": "Nov", "dic": "Dec"
-				};
 		
-				// Spezza la stringa della data e sostituisci il mese con quello in inglese
-				let dateParts = sDate.split(' ');
-				let day = dateParts[0];
-				let month = monthMap[dateParts[1].toLowerCase()];
-				let year = dateParts[2];
-		
-				// Crea la data in formato compatibile
-				birthDate = new Date(`${month} ${day}, ${year}`);
-			} else {
 				// Se la lingua non è italiana, si presuppone il formato sDate sia valido
 				birthDate = new Date(sDate);
-			}
+			
 		
 			// Calcolo dell'età
 			const today = new Date();

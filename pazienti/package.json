@@ -1,5 +1,8 @@
 {
   "cds": {
+    "cov2ap": {
+      "plugin": true
+    },
     "requires": {
       "[production]": {
         "auth": "xsuaa",
@@ -69,5 +72,8 @@
         }
       }
     }
+  },
+  "dependencies": {
+    "@cap-js-community/odata-v2-adapter": "^1.13.6"
   }
 }

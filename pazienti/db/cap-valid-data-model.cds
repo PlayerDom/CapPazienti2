@@ -8,7 +8,7 @@ entity Users : cuid,managed {
 
 entity Pazienti : cuid {
   cognome: String(100) @title: 'Cognome';
-  dataNascita: Timestamp @title: 'Data di Nascita';
+  dataNascita: Date @title: 'Data di Nascita';
   CF: String(16) @title: 'Codice Fiscale';
   StatusRapporto: Association to StatusRapporto;
   residenza: String(255) @title: 'Residenza';

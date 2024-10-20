@@ -1,7 +1,8 @@
 sap.ui.define([
     "./BaseController",
     'sap/m/MessageToast',
-    './utils/formatter', 'sap/ui/model/Filter',
+    './utils/formatter', 
+    'sap/ui/model/Filter',
     'sap/ui/model/FilterOperator',
     'sap/ui/model/json/JSONModel',
     'sap/ui/model/Sorter',
@@ -19,17 +20,6 @@ sap.ui.define([
                 var oView = this.getView();
                 var oFilterModel = new JSONModel([]);
                 oView.setModel(oFilterModel, "filtersModel");
-            },
-            onNavToBooks: function () {
-                this.getRouter().navTo("books");
-            },
-            onListItemPressed: function (oEvent) {
-                var oItem, oCtx;
-                oItem = oEvent.getSource();
-                oCtx = oItem.getBindingContext();
-                this.getRouter().navTo("author", {
-                    authorId: oCtx.getProperty("ID")
-                });
             },
             onSearch: function () {
                 var oView = this.getView();
@@ -208,91 +198,122 @@ sap.ui.define([
 
             onExport: function () {
                 let oView = this.getView();
-                let oModel = oView.getModel();  // Assicurati che questo sia il modello OData V4
+                let oModel = oView.getModel();
+
+                // Get the current filters applied to the table
+                let oFilter = this.getView().getModel("filtersModel").getData();
                 let that = this;
-            
-                // Controlla se il modello è effettivamente OData V4
-                if (oModel && oModel.isA("sap.ui.model.odata.v4.ODataModel")) {
-            
-                    // Definisci il contesto per l'export
-                    let oListBinding = oModel.bindList("/Pazienti", undefined, undefined, undefined, {
-                        $filter: this.getView().getModel("filtersModel").getData(),
-                        $expand: "StatusRapporto"  // Effettua l'expand della proprietà CartellaClinica
-                    });
-            
-                    oListBinding.requestContexts().then(function (aContexts) {
-                        let aData = aContexts.map(function (oContext) {
-                            return oContext.getObject();
-                        });
-            
-                        // Crea la configurazione delle colonne
-                        var aCols = that.createColumnConfig();
+
+                oModel.read("/Pazienti", {
+                    urlParameters: {
                         
-                        // Prepara l'array per il contenuto del foglio Excel
-                        var aRows = [];
-            
-                        // Aggiungi l'intestazione delle colonne
-                        var aHeader = aCols.map(function (col) {
-                            return col.label;
-                        });
-                        aRows.push(aHeader);
-            
-                        // Aggiungi i dati delle righe
-                        aData.forEach(function (item) {
-                            // Inizializza un nuovo array per la riga
-                            var aRow = aCols.map(function (col) {
+                        "$expand": "StatusRapporto"
+                    },
+                    filters: [oFilter],
+                    success: function (oData) {
+                        var aCols = that.createColumnConfig(oData.results);
+                        var aColumns = oData.results.map(function (item) {
+                            var newItem = {};
+                            aCols.forEach(function (col) {
                                 let value = item[col.property.split('/')[0]]; // Ottieni l'oggetto principale
                                 if (value && col.property.includes('/')) {
                                     // Accedi alla proprietà espansa
                                     let expandedProperty = col.property.split('/')[1];
-                                    return value[expandedProperty];  // Restituisci la proprietà espansa
+                                    newItem[col.label] = value[expandedProperty];
                                 } else if (col.formatter) {
-                                    // Applica un formatter se esiste
-                                    return col.formatter(item[col.property]);
+                                    newItem[col.label] = col.formatter(item[col.property]);
                                 } else {
-                                    // Restituisci il valore direttamente
-                                    return item[col.property];
+                                    newItem[col.label] = item[col.property];
                                 }
                             });
-                            aRows.push(aRow);
+                            return newItem;
                         });
-            
-                        // Converte i dati in un foglio Excel
-                        var ws = XLSX.utils.aoa_to_sheet(aRows);
-            
-                        // Imposta larghezze automatiche per le colonne basate sul contenuto
-                        var colWidths = aCols.map(function (col, index) {
-                            var maxLength = Math.max(col.label.length, ...aData.map(function (item) {
-                                var value = item[col.property];
-                                return value ? String(value).length : 0;
-                            }));
-                            return { wpx: maxLength * 10 };  // Imposta la larghezza in pixel
-                        });
-                        ws['!cols'] = colWidths;
-            
-                        // Aggiungi l'AutoFilter
-                        ws['!autofilter'] = { ref: XLSX.utils.encode_range({ s: { c: 0, r: 0 }, e: { c: aHeader.length - 1, r: aRows.length - 1 } }) };
-            
-                        // Crea il workbook e scarica il file Excel
+
+                        // Convert the JSON data to a worksheet
+                        var ws = XLSX.utils.json_to_sheet(aColumns, { header: aCols.map(col => col.label) });
                         var wb = XLSX.utils.book_new();
                         XLSX.utils.book_append_sheet(wb, ws, "Lista Pazienti");
-                        XLSX.writeFile(wb, 'Excel lista pazienti.xlsx');
-            
-                    }).catch(function (oError) {
-                        console.error(oError);
-                    });
-                } else {
-                    console.error("Modello OData V4 non trovato o non corretto.");
-                }
+
+                        // Imposta le larghezze delle colonne
+                        ws['!cols'] = aCols.map(function (col) {
+                            return { wch: col.width }; // wch è la larghezza della colonna in caratteri
+                        });
+
+                        // Aggiungi AutoFilter a tutte le colonne (da A1 a ultima colonna)
+                        var lastColumn = String.fromCharCode(65 + aCols.length - 1); // 65 è il codice ASCII per 'A'
+                        ws['!autofilter'] = { ref: "A1:" + lastColumn + "1" };
+
+                        XLSX.writeFile(wb, 'Esportazione tabella controlli.xlsx');
+                    },
+                    error: function (oError) {
+                        console.log(oError);
+                    }
+                });
             },
+
+            createColumnConfig: function (data) {
+                // Retrieve the resource bundle for internationalization
+                var oResourceBundle = this.getView().getModel("i18n").getResourceBundle();
+                var oTable = this.byId("tableTest");
+                var oItems = data
+                var that = this
+                var padding = 2;
+
+                // Initialize an object to track the maximum length of each column's content
+
+                var maxLengths = {
+                    cognome:0,
+                    CF: 0,
+                    StatusRapporto: 0,
+                    residenza: 0,
+                    telefono:0,
+                    email: 0,
+                };
+
+                // Iterate over table items to calculate the maximum content length for each column
+            oItems.forEach(function (oData) {
+               let oLabel = that.getView().getModel("i18n").getResourceBundle();
             
-            
-            createColumnConfig: function () {
+            // Access expanded properties
+
+            if (oData.cognome) {
+                maxLengths.cognome = Math.max(oLabel.getText("labelNomeCognome").length, oData.cognome.length);
+            }
+
+            if (oData.CF) {
+                maxLengths.CF = Math.max(oLabel.getText("labelCodiceFiscale").length, oData.CF.length);
+            }
+
+            if (oData.StatusRapporto && oData.StatusRapporto.statusText) {
+                maxLengths.StatusRapporto = Math.max(oLabel.getText("labelStatusRapporto").length, oData.StatusRapporto.statusText.length);
+            }
+
+            if (oData.residenza) {
+                maxLengths.residenza = Math.max(oLabel.getText("labelResidenza").length, oData.residenza.length);
+            }
+
+            if (oData.telefono) {
+                maxLengths.telefono = Math.max(oLabel.getText("labelTelefono").length, oData.telefono.length);
+            }
+
+            if (oData.email) {
+                maxLengths.email = Math.max(oLabel.getText("labelEmail").length, oData.email.length);
+            }
+        }
+    );
+
+                // Add padding to each column's maximum length
+                for (var key in maxLengths) {
+                    maxLengths[key] += padding;
+                }
+
+                // Create and return the column configuration array
                 return [
                     {
                         label: 'Nome e Paziente',
                         property: 'cognome',
-                        type: 'string'
+                        type: 'string',
+                        width: maxLengths.cognome
                     },
                     {
                         label: 'Data di Nascita',
@@ -300,36 +321,90 @@ sap.ui.define([
                         type: 'date',
                         formatter: function (value) {
                             return value ? new Date(value).toLocaleDateString() : '';
-                        }
+                        },
+                        width: 15
+                    
                     },
                     {
                         label: 'Codice Fiscale',
                         property: 'CF',
-                        type: 'string'
+                        type: 'string',
+                        width: maxLengths.CF
                     },
                     {
                         label: 'Stato del Rapporto',
                         property: 'StatusRapporto/statusText',
-                        type: 'string'
+                        type: 'string',
+                        width: maxLengths.StatusRapporto
                     },
                     {
                         label: 'Residenza',
                         property: 'residenza',
-                        type: 'string'
+                        type: 'string',
+                        width: maxLengths.residenza 
                     },
                     {
                         label: 'Numero di telefono',
                         property: 'telefono',
-                        type: 'string'
+                        type: 'string',
+                        width: maxLengths.telefono
                     },
                     {
                         label: 'Contatto email',
                         property: 'email',
-                        type: 'string'
+                        type: 'string',
+                        width: maxLengths.email
                     },
                     // Aggiungi altre colonne qui
                 ];
-            }            
+            }  
+            
+
+            
+            
+            // createColumnConfig: function () {
+            //     return [
+            //         {
+            //             label: 'Nome e Paziente',
+            //             property: 'cognome',
+            //             type: 'string'
+            //         },
+            //         {
+            //             label: 'Data di Nascita',
+            //             property: 'dataNascita',
+            //             type: 'date',
+            //             formatter: function (value) {
+            //                 return value ? new Date(value).toLocaleDateString() : '';
+            //             }
+            //         },
+            //         {
+            //             label: 'Codice Fiscale',
+            //             property: 'CF',
+            //             type: 'string'
+            //         },
+            //         {
+            //             label: 'Stato del Rapporto',
+            //             property: 'StatusRapporto/statusText',
+            //             type: 'string'
+            //         },
+            //         {
+            //             label: 'Residenza',
+            //             property: 'residenza',
+            //             type: 'string'
+            //         },
+            //         {
+            //             label: 'Numero di telefono',
+            //             property: 'telefono',
+            //             type: 'string'
+            //         },
+            //         {
+            //             label: 'Contatto email',
+            //             property: 'email',
+            //             type: 'string'
+            //         },
+            //         // Aggiungi altre colonne qui
+            //     ];
+            // }            
 
 
 
